@@ -8,6 +8,7 @@ def index():
 	return render_template('index.html')
 connect = sqlite3.connect('database.db')
 connect.execute('CREATE TABLE IF NOT EXISTS PARTICIPANTS (date TEXT, mood TEXT, headache TEXT, period TEXT, other TEXT)')
+connect.execute('CREATE TABLE IF NOT EXISTS FOOD (date TEXT, breakfast TEXT, lunch TEXT, dinner TEXT, snacks TEXT)')
 @app.route('/join', methods=['GET', 'POST'])
 def join():
 	if request.method == 'POST':
@@ -25,51 +26,30 @@ def join():
 	else:
 		return render_template('join.html')
 
-# Test
+@app.route('/food', methods=['GET', 'POST'])
+def food():
+   if request.method == 'POST':
+       date = request.form['date']
+       breakfast = request.form['breakfast']
+       lunch = request.form['lunch']
+       dinner = request.form['dinner']
+       snacks = request.form['snacks']
 
-""" def index():
-        return render_template('index.html')
-connect = sqlite3.connect('database.db')
-connect.execute('CREATE TABLE IF NOT EXISTS FOOD (breakfast TEXT, lunch TEXT, dinner TEXT, snacks TEXT)')
-@app.route('/join', methods=['GET', 'POST'])
-def join():
-        if request.method == 'POST':
-                breakfast = request.form['breakfast']
-                lunch = request.form['lunch']
-                dinner = request.form['dinnner']
-                snacks = request.form['snacks']
-
-                with sqlite3.connect("database.db") as users:
-                        cursor = users.cursor()
-                        cursor.execute('INSERT INTO FOOD(breakfast,lunch,dinner,snacks) VALUES (?,?,?,?,?)', (breakfast,lunch,dinner,snacks))
-                        users.commit()
-                return render_template("index.html")
-        else:
-                return render_template('join.html') """
-
-# End test
+       with sqlite3.connect("database.db") as users:
+           cursor = users.cursor()
+           cursor.execute('INSERT INTO FOOD(date,breakfast,lunch,dinner,snacks) VALUES (?,?,?,?,?)', (date,breakfast,lunch,dinner,snacks))
+           users.commit()
+       return render_template("index.html")
+   else:
+       return render_template('food.html')
 
 @app.route('/participants')
 def participants():
 	connect = sqlite3.connect('database.db')
 	cursor = connect.cursor()
 	cursor.execute('SELECT * FROM PARTICIPANTS')
+	cursor.execute('SELECT * FROM FOOD')
 	data = cursor.fetchall()
 	return render_template("participants.html", data=data)
 if __name__ == '__main__':
 	app.run(debug=False)
-
-# Test
-
-""" def meals():
-        connect = sqlite3.connect('database.db')
-        cursor = connect.cursor()
-        cursor.execute('SELECT * FROM FOOD')
-        meal = cursor.fetchall()
-        return render_template("participants.html", meal=meal)
-if __name__ == '__main__':
-        app.run(debug=False) """
-
-
-
-# Ends test 

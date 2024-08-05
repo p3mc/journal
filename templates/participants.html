@@ -34,7 +34,7 @@
             {%endfor%} 
           </table>           
 </div>
-<!-- <div class="wrapper">
+<div class="wrapper">
         <table style="width:100%">
             <tr>
               <th>date</th>
@@ -43,16 +43,17 @@
               <th>period</th>
               <th>other</th>
             </tr>
-            {%for participant in meal%}
+            {%for food in meal%}
                <tr>
-                 <td>{{participant[0]}}</td>
-                 <td>{{participant[1]}}</td>
-                 <td>{{participant[2]}}</td>
-                 <td>{{participant[3]}}</td>
-                </tr>
+                 <td>{{food[0]}}</td>
+                 <td>{{food[1]}}</td>
+                 <td>{{food[2]}}</td>
+                 <td>{{food[3]}}</td>
+                 <td>{{food[4]}}</td>
+		</tr>
             {%endfor%}
           </table>
-</div> -->
+</div>
 
     </body> 
 </html> 
