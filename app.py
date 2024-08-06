@@ -2,6 +2,7 @@ from flask import Flask, render_template, request
 import sqlite3
 app = Flask(__name__, static_folder='static')
 
+# if URL / or /home: 
 @app.route('/')
 @app.route('/home')
 def index():
@@ -9,6 +10,8 @@ def index():
 connect = sqlite3.connect('database.db')
 connect.execute('CREATE TABLE IF NOT EXISTS PARTICIPANTS (date TEXT, mood TEXT, headache TEXT, period TEXT, other TEXT)')
 connect.execute('CREATE TABLE IF NOT EXISTS FOOD (date TEXT, breakfast TEXT, lunch TEXT, dinner TEXT, snacks TEXT)')
+
+#if URL /join:
 @app.route('/join', methods=['GET', 'POST'])
 def join():
 	if request.method == 'POST':
@@ -26,6 +29,7 @@ def join():
 	else:
 		return render_template('join.html')
 
+#if URL /food:
 @app.route('/food', methods=['GET', 'POST'])
 def food():
    if request.method == 'POST':
@@ -43,12 +47,12 @@ def food():
    else:
        return render_template('food.html')
 
+#if URL /participants
 @app.route('/participants')
 def participants():
 	connect = sqlite3.connect('database.db')
 	cursor = connect.cursor()
-	cursor.execute('SELECT * FROM PARTICIPANTS')
-	cursor.execute('SELECT * FROM FOOD')
+	cursor.execute('SELECT * FROM PARTICIPANTS, FOOD')
 	data = cursor.fetchall()
 	return render_template("participants.html", data=data)
 if __name__ == '__main__':
