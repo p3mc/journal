@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request
+from datetime import date
 import sqlite3
 app = Flask(__name__, static_folder='static')
 
@@ -10,12 +11,13 @@ def index():
 connect = sqlite3.connect('database.db')
 connect.execute('CREATE TABLE IF NOT EXISTS PARTICIPANTS (date TEXT, mood TEXT, headache TEXT, period TEXT, other TEXT)')
 connect.execute('CREATE TABLE IF NOT EXISTS FOOD (date TEXT, breakfast TEXT, lunch TEXT, dinner TEXT, snacks TEXT)')
+today = date.today()
 
 #if URL /join:
 @app.route('/join', methods=['GET', 'POST'])
 def join():
 	if request.method == 'POST':
-		date = request.form['date']
+		date = today #request.form['date']
 		mood = request.form['mood']
 		headache = request.form['headache']
 		period = request.form['period']
@@ -33,7 +35,7 @@ def join():
 @app.route('/food', methods=['GET', 'POST'])
 def food():
    if request.method == 'POST':
-       date = request.form['date']
+       date = today
        breakfast = request.form['breakfast']
        lunch = request.form['lunch']
        dinner = request.form['dinner']
