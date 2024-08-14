@@ -49,6 +49,13 @@ def food():
    else:
        return render_template('food.html')
 
+# if URL /search
+@app.route('/search', methods=['GET', 'POST'])
+def search():
+	if request.method == 'POST':
+		search = request.form['search']
+	return render_template("search.html", search=search)
+
 #if URL /participants
 @app.route('/participants')
 def participants():
