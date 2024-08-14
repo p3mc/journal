@@ -54,7 +54,7 @@ def food():
 def participants():
 	connect = sqlite3.connect('database.db')
 	cursor = connect.cursor()
-	cursor.execute('SELECT * FROM PARTICIPANTS, FOOD')
+	cursor.execute('SELECT * FROM PARTICIPANTS INNER JOIN FOOD on FOOD.date = PARTICIPANTS.date;') # lub ('SELECT * FROM PARTICIPANTS UNION SELECT * FROM FOOD;')
 	data = cursor.fetchall()
 	return render_template("participants.html", data=data)
 if __name__ == '__main__':
