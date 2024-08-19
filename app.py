@@ -3,6 +3,8 @@ from datetime import date
 import sqlite3
 app = Flask(__name__, static_folder='static')
 
+lookfor = ""
+
 # if URL / or /home: 
 @app.route('/')
 @app.route('/home')
@@ -17,7 +19,7 @@ today = date.today()
 @app.route('/join', methods=['GET', 'POST'])
 def join():
 	if request.method == 'POST':
-		date = today #request.form['date']
+		date = today.strftime("%m/%d/%Y") #request.form['date']
 		mood = request.form['mood']
 		headache = request.form['headache']
 		period = request.form['period']
@@ -35,7 +37,7 @@ def join():
 @app.route('/food', methods=['GET', 'POST'])
 def food():
    if request.method == 'POST':
-       date = today
+       date = today.strftime("%m/%d/%Y")
        breakfast = request.form['breakfast']
        lunch = request.form['lunch']
        dinner = request.form['dinner']
@@ -52,9 +54,14 @@ def food():
 # if URL /search
 @app.route('/search', methods=['GET', 'POST'])
 def search():
-	if request.method == 'POST':
-		search = request.form['search']
-	return render_template("search.html", search=search)
+        connect = sqlite3.connect('database.db')
+        cursor = connect.cursor()
+        lookfor = request.form['lookfor'] 
+        cursor.execute('SELECT * FROM PARTICIPANTS INNER JOIN FOOD on FOOD.date = PARTICIPANTS.date WHERE PARTICIPANTS.date LIKE \"%s\";' % lookfor)
+        data = cursor.fetchall()
+        return render_template("search.html", data=data)
+
+
 
 #if URL /participants
 @app.route('/participants')
