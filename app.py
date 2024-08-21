@@ -3,7 +3,7 @@ from datetime import date
 import sqlite3
 app = Flask(__name__, static_folder='static')
 
-lookfor = ""
+lookfor = "ababa"
 
 # if URL / or /home: 
 @app.route('/')
@@ -51,15 +51,20 @@ def food():
    else:
        return render_template('food.html')
 
+
 # if URL /search
 @app.route('/search', methods=['GET', 'POST'])
 def search():
-        connect = sqlite3.connect('database.db')
-        cursor = connect.cursor()
-        lookfor = request.form['lookfor'] 
-        cursor.execute('SELECT * FROM PARTICIPANTS INNER JOIN FOOD on FOOD.date = PARTICIPANTS.date WHERE PARTICIPANTS.date LIKE \"%s\";' % lookfor)
-        data = cursor.fetchall()
-        return render_template("search.html", data=data)
+   if request.method == 'POST':
+       lookfor = request.form['lookfor']
+
+       with sqlite3.connect("database.db") as users:
+           cursor = users.cursor()
+           cursor.execute('SELECT * FROM PARTICIPANTS INNER JOIN FOOD on FOOD.date = PARTICIPANTS.date WHERE PARTICIPANTS.date LIKE \"%s\";' % lookfor)
+           users.commit()
+       return render_template("index.html")
+   else:
+       return render_template('search.html')
 
 
 
