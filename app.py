@@ -53,18 +53,19 @@ def food():
 
 
 # if URL /search
-@app.route('/search', methods=['GET', 'POST'])
+@app.route('/search', methods=['GET', 'POST'])  
 def search():
-   if request.method == 'POST':
-       lookfor = request.form['lookfor']
+   if request.method == 'POST':  # jesli metoda "POST"
+       lookfor = request.form['lookfor']  # zapytanie o dane
 
-       with sqlite3.connect("database.db") as users:
-           cursor = users.cursor()
-           cursor.execute('SELECT * FROM PARTICIPANTS INNER JOIN FOOD on FOOD.date = PARTICIPANTS.date WHERE PARTICIPANTS.date LIKE \"%s\";' % lookfor)
-           users.commit()
-       return render_template("index.html")
+       with sqlite3.connect("database.db") as users:  # polacz z baza danych?
+           cursor = users.cursor()  # do wykonywania rzeczy w sqlite3
+           cursor.execute('SELECT * FROM PARTICIPANTS INNER JOIN FOOD on FOOD.date = PARTICIPANTS.date WHERE PARTICIPANTS.date LIKE \"%s\";' % lookfor)  # wykonaj 
+           users.commit()  # zatwierdz
+           data = cursor.fetchall()  # zbierz
+       return render_template("search.html", data=data)  # renderuj template z danymi
    else:
-       return render_template('search.html')
+       return render_template('search.html')  # renderuj template bez danych
 
 
 
